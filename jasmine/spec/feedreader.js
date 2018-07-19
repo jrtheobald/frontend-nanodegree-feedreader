@@ -31,42 +31,103 @@ $(function() {
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
-
+        it('has url', function() {
+            allFeeds.forEach(function(element) {
+                expect(element.hasOwnProperty('url')).toBe(true);
+                expect(element.url).not.toBe('');
+            })
+        });
 
         /* TODO: Write a test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
+        it('has name', function() {
+            allFeeds.forEach(function(element) {
+                expect(element.hasOwnProperty('name')).toBe(true);
+                expect(element.name).not.toBe('');
+            });
+        });
     });
 
 
     /* TODO: Write a new test suite named "The menu" */
-
+    describe('The menu', function() {
         /* TODO: Write a test that ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
          * hiding/showing of the menu element.
          */
+        it('is hidden by default', function() {
+            expect(document.body.className).toBe('menu-hidden');
+        });
 
          /* TODO: Write a test that ensures the menu changes
           * visibility when the menu icon is clicked. This test
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
           */
+         it('changes visibility on click', function() {
+            const theMenu = $('.menu-icon-link');
+            theMenu.trigger('click');
+            expect(document.body.className).toBe('');
+            theMenu.trigger('click');
+            expect(document.body.className).toBe('menu-hidden');
+         });
+    });
+        
 
     /* TODO: Write a new test suite named "Initial Entries" */
-
+    describe('Initial Entries', function() {
         /* TODO: Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        beforeEach(function(done) {
+            setTimeout(function() {
+              loadFeed(0, done);
+            }, 1);
+          });
+
+        it('has at least a single entry', function(done) {
+            // expect a single entry
+            let feed = $('.feed').children();
+            expect(feed.length).toBeGreaterThan(0);
+            done();
+        });
+    });
+        
 
     /* TODO: Write a new test suite named "New Feed Selection" */
-
+    describe('New Feed Selection', function() {
         /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
+        * by the loadFeed function that the content actually changes.
+        * Remember, loadFeed() is asynchronous.
+        */
+       let firstFeed, secondFeed;
+
+       beforeEach(function(done) {
+        setTimeout(function() {
+            loadFeed(0, function() {
+               firstFeed = $('.feed').children()[0];
+                console.log(firstFeed.innerText);
+                loadFeed(1, function() {
+                   secondFeed = $('.feed').children()[0];
+                    console.log(secondFeed.innerText);
+                    done();
+                });
+            });
+        }, 1);
+      });
+
+    it('changes content with each feed', function(done) {
+        // expect a change in content
+        expect(firstFeed === secondFeed).toBe(false);
+        done();
+    });       
+
+    });
+        
 }());
