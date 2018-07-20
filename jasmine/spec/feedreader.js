@@ -59,7 +59,7 @@ $(function() {
          * hiding/showing of the menu element.
          */
         it('is hidden by default', function() {
-            expect(document.body.className).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
 
          /* A test that ensures the menu changes
@@ -70,9 +70,9 @@ $(function() {
          it('changes visibility on click', function() {
             const theMenu = $('.menu-icon-link');
             theMenu.trigger('click');
-            expect(document.body.className).toBe('');
+            expect($('body').hasClass('')).toBe(true);
             theMenu.trigger('click');
-            expect(document.body.className).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
          });
     });
         
@@ -85,15 +85,29 @@ $(function() {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        // Temporarily disable for a test
+        // This will be deleted.
+        // Timeout is not needed.
+        //  beforeEach(function(done) {
+        //     setTimeout(function() {
+        //       loadFeed(0, done);
+        //     }, 1);
+        //   });
+
+        // it('has at least a single entry', function(done) {
+        //     // expect a single entry
+        //     let feed = $('.feed').children();
+        //     expect(feed.length).toBeGreaterThan(0);
+        //     done();
+        // });
+
         beforeEach(function(done) {
-            setTimeout(function() {
               loadFeed(0, done);
-            }, 1);
-          });
+            });
 
         it('has at least a single entry', function(done) {
             // expect a single entry
-            let feed = $('.feed').children();
+            let feed = $('.feed .entry');
             expect(feed.length).toBeGreaterThan(0);
             done();
         });
@@ -109,7 +123,6 @@ $(function() {
        let firstFeed, secondFeed;
 
        beforeEach(function(done) {
-        setTimeout(function() {
             loadFeed(0, function() {
                firstFeed = $('.feed').children()[0];
                 console.log(firstFeed.innerText);
@@ -119,12 +132,11 @@ $(function() {
                     done();
                 });
             });
-        }, 1);
       });
 
     it('changes content with each feed', function(done) {
         // expect a change in content
-        expect(firstFeed === secondFeed).toBe(false);
+        expect(firstFeed.innerText === secondFeed.innerText).toBe(false);
         done();
     });       
 
